@@ -1,0 +1,4 @@
+- As a test object, I want clear instructions and user-friendly interface that allow me to easily choose the product that I am interested in.
+- As a marketing time, I want to be able to correctly analyze the data by knowing the percentage of times that an item was clicked when it was shown.
+- As a developer, I want to use object constructors and DOM and make sure to utilize comments to make my code more organized and easy to understand.
+- As a developer, I want to design the page that has proper font, color palette and layout. 
