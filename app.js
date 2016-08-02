@@ -1,11 +1,12 @@
 
 'use strict';
 //An array to store images from constructor
-
+var totalClicks = 0;
 var imageArray = [];
 var randLeft;
 var randMiddle;
 var randRight;
+var previouslyShown = [];
 //constructor
 function allProduct(productName, filePath){
   this.productName = productName;
@@ -38,15 +39,18 @@ var wine_glass = new allProduct('wine_glass','image/wine-glass.jpg');
 var imageLeft = document.getElementById('left');
 var imageMiddle = document.getElementById('middle');
 var imageRight = document.getElementById('right');
-var userClick = document.getElementById('container');
-//match random number to element in imageArray and display three images
+//var previouslyShown = [];
+
+//generate three different numbers
 var getRandomNumber = function() {
+
   randLeft = (Math.floor(Math.random() * imageArray.length));
   randMiddle = (Math.floor(Math.random() * imageArray.length));
   randRight = (Math.floor(Math.random() * imageArray.length));
 
   while (randLeft === randMiddle || randLeft === randRight || randMiddle === randRight){
     if ( randLeft === randMiddle){
+
       randLeft = (Math.floor(Math.random() * imageArray.length));
     }
     if ( randLeft === randRight){
@@ -55,33 +59,66 @@ var getRandomNumber = function() {
     if (randMiddle === randRight){
       randMiddle = (Math.floor(Math.random() * imageArray.length));
     }
+
   }
+  if(randLeft === previouslyShown[0] ||
+    randLeft === previouslyShown[1] || randLeft ===
+    previouslyShown[2] || randMiddle ===
+    previouslyShown[0] || randMiddle ===
+    previouslyShown[1] || randMiddle ===
+    previouslyShown[2] || randRight ===
+    previouslyShown[0] || randRight ===
+    previouslyShown[1] || randRight ===
+    previouslyShown[2]){
+    randLeft = (Math.floor(Math.random() * imageArray.length));
+    randMiddle = (Math.floor(Math.random() * imageArray.length));
+    randRight = (Math.floor(Math.random() * imageArray.length));
+  }
+  //match the three different numbers to the imageArray elements
   imageLeft.src = imageArray[randLeft].filePath;
   imageMiddle.src = imageArray[randMiddle].filePath;
   imageRight.src = imageArray[randRight].filePath;
-  imageArray[randLeft].numberShown = imageArray[randLeft].numberShown + 1;
-  imageArray[randMiddle].numberShown = imageArray[randMiddle].numberShown + 1;
-  imageArray[randRight].numberShown = imageArray[randRight].numberShown + 1;
+
+  imageArray[randLeft].numberShown += 1;
+  imageArray[randMiddle].numberShown += 1;
+  imageArray[randRight].numberShown += 1;
+  //console.log(imageArray[randLeft].productName + ' has ' + imageArray[randLeft].numberShown + ' views' );
 
 };
 function handleClick(event){
-  event.preventDefault();
-  if (event.target.id === 'left'){
-    console.log('user clicked left');
-
-    imageArray[randLeft].numberShown = imageArray[randLeft].numberShown + 1;
-  } else if(event.target.id === 'middle'){
-    console.log('user clicked middle');
-
-    imageArray[randMiddle].numberShown = imageArray[randMiddle].numberShown + 1;
-  } else if(event.target.id === 'right'){
-    console.log('user clicked right');
-
-    imageArray[randRight].numberShown = imageArray[randRIght].numberShown + 1;
-  } else{
-    alert('You must click an image!');
+  //previouslyShown = randomNumberArray;
+  if(event.target.id !== 'left' && event.target.id !== 'middle' && event.target.id !== 'right'){
+    alert('Click on an image');
+    return;
   }
+  totalClicks += 1;
+  console.log('There have been ' + totalClicks + ' total clicks');
+  if (event.target.id === 'left' ){
+    //console.log('user clicked left');
+    getRandomNumber();
+    imageArray[randLeft].numberClicked = imageArray[randLeft].numberClicked + 1;
 
+  } else if(event.target.id === 'middle'){
+    //console.log('user clicked middle');
+    getRandomNumber();
+    imageArray[randMiddle].numberClicked = imageArray[randMiddle].numberClicked + 1;
+  } else if(event.target.id === 'right'){
+    //console.log('user clicked right');
+    getRandomNumber();
+    imageArray[randRight].numberClicked = imageArray[randRight].numberClicked + 1;
+  }
+  if (totalClicks > 3){
+    container.removeEventListener('click',handleClick);
+    console.log('max number of clicks reached');
+    resultsButton.hidden = false;
+  }
+}
+
+function handleResultsButton(){
+  alert('this is when you draw the chart.');
 }
 getRandomNumber();
+var container = document.getElementById('container');
 container.addEventListener('click',handleClick);
+var resultsButton = document.getElementById('resultsButton');
+resultsButton.addEventListener('click',handleResultsButton);
