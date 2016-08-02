@@ -107,7 +107,7 @@ function handleClick(event){
     getRandomNumber();
     imageArray[randRight].numberClicked = imageArray[randRight].numberClicked + 1;
   }
-  if (totalClicks > 3){
+  if (totalClicks > 25){
     container.removeEventListener('click',handleClick);
     console.log('max number of clicks reached');
     resultsButton.hidden = false;
