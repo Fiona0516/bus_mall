@@ -1,6 +1,7 @@
 
 'use strict';
 //An array to store images from constructor
+
 var imageArray = [];
 var randLeft;
 var randMiddle;
@@ -63,5 +64,24 @@ var getRandomNumber = function() {
   imageArray[randRight].numberShown = imageArray[randRight].numberShown + 1;
 
 };
+function handleClick(event){
+  event.preventDefault();
+  if (event.target.id === 'left'){
+    console.log('user clicked left');
 
+    imageArray[randLeft].numberShown = imageArray[randLeft].numberShown + 1;
+  } else if(event.target.id === 'middle'){
+    console.log('user clicked middle');
+
+    imageArray[randMiddle].numberShown = imageArray[randMiddle].numberShown + 1;
+  } else if(event.target.id === 'right'){
+    console.log('user clicked right');
+
+    imageArray[randRight].numberShown = imageArray[randRIght].numberShown + 1;
+  } else{
+    alert('You must click an image!');
+  }
+
+}
 getRandomNumber();
+container.addEventListener('click',handleClick);
