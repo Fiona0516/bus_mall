@@ -10,5 +10,7 @@ section{
   border-style:solid;
   width: 1000px;
   height: 200px;
-
+}
+canvas{
+  outline: 2px solid orange;
 }
