@@ -7,6 +7,7 @@ var randLeft;
 var randMiddle;
 var randRight;
 var previouslyShown = [];
+
 //constructor
 function allProduct(productName, filePath){
   this.productName = productName;
@@ -107,16 +108,35 @@ function handleClick(event){
     getRandomNumber();
     imageArray[randRight].numberClicked = imageArray[randRight].numberClicked + 1;
   }
-  if (totalClicks > 25){
+  if (totalClicks > 4){
     container.removeEventListener('click',handleClick);
     console.log('max number of clicks reached');
     resultsButton.hidden = false;
   }
 }
+var numberClicked = [];
 
 function handleResultsButton(){
   alert('this is when you draw the chart.');
+  var data = {
+    labels: imageArray,
+    datasets:[
+      {
+        label: 'Product Voted',
+        data: numberClicked,
+      },
+    ]
+  };
 }
+
+function drawChart(){
+  var ctx = document.getElementById('resultBar').getContext('2d');
+  var barChart = new Chart(ctx,{
+    type: 'bar',
+    data: data,
+  });
+}
+// closing for function
 getRandomNumber();
 var container = document.getElementById('container');
 container.addEventListener('click',handleClick);
