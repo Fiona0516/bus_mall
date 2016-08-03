@@ -74,6 +74,7 @@ var getRandomNumber = function() {
     randLeft = (Math.floor(Math.random() * imageArray.length));
     randMiddle = (Math.floor(Math.random() * imageArray.length));
     randRight = (Math.floor(Math.random() * imageArray.length));
+
   }
   //match the three different numbers to the imageArray elements
   imageLeft.src = imageArray[randLeft].filePath;
@@ -114,29 +115,36 @@ function handleClick(event){
     resultsButton.hidden = false;
   }
 }
-var numberClicked = [];
 
 function handleResultsButton(){
-  alert('this is when you draw the chart.');
-  var data = {
-    labels: imageArray,
-    datasets:[
-      {
-        label: 'Product Voted',
-        data: numberClicked,
-      },
-    ]
-  };
-}
-
-function drawChart(){
-  var ctx = document.getElementById('resultBar').getContext('2d');
-  var barChart = new Chart(ctx,{
+  //alert('this is when you draw the chart.');
+  var labels = [];
+  var dataClicks = [];
+  var dataShown = [];
+  for( var i = 0; i < imageArray.length; i++){
+    labels.push(imageArray[i].productName);
+    dataClicks.push(imageArray[i].numberClicked);
+    dataShown.push(imageArray[i].numberShown);
+  }
+  var ctx = document.getElementById('resultBar');
+  var myChart = new Chart(ctx,{
     type: 'bar',
-    data: data,
+    data: {
+      labels: labels,
+      datasets:[{
+        label: 'Number of Clicks',
+        data: dataClicks,
+        backgroundColor: '#ff1a8c',
+      },
+        {
+          label: 'Number of Times Shown',
+          data: dataShown,
+          backgroundColor: '#0066cc',
+        }]
+    },
+
   });
-}
-// closing for function
+}// closing for function
 getRandomNumber();
 var container = document.getElementById('container');
 container.addEventListener('click',handleClick);
