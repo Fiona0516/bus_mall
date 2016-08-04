@@ -1,12 +1,15 @@
-
 'use strict';
-//An array to store images from constructor
+//global variables
 var totalClicks = 0;
 var imageArray = [];
 var randLeft;
 var randMiddle;
 var randRight;
 var previouslyShown = [];
+var usersData;
+var imageLeft = document.getElementById('left');
+var imageMiddle = document.getElementById('middle');
+var imageRight = document.getElementById('right');
 
 //constructor
 function allProduct(productName, filePath){
@@ -16,32 +19,39 @@ function allProduct(productName, filePath){
   this.numberClicked = 0;
   imageArray.push(this);
 }
-var bag = new allProduct('bag','image/bag.jpg');
-var banana = new allProduct('banana','image/banana.jpg');
-var bathroom = new allProduct('bathroom','image/bathroom.jpg');
-var boots = new allProduct('boots','image/boots.jpg');
-var breakfast = new allProduct('breakfast','image/breakfast.jpg');
-var bubblegum = new allProduct('bubblegum','image/bubblegum.jpg');
-var chair = new allProduct('chair','image/chair.jpg');
-var cthulhu = new allProduct('cthulhu','image/cthulhu.jpg');
-var dog_duck = new allProduct('dog_duck','image/dog-duck.jpg');
-var dragon = new allProduct('dragon','image/dragon.jpg');
-var pen = new allProduct('pen','image/pen.jpg');
-var pet_sweep = new allProduct('pet_sweep','image/pet-sweep.jpg');
-var scissors = new allProduct('scissors','image/scissors.jpg');
-var shark = new allProduct('shark','image/shark.jpg');
-var sweep = new allProduct('sweep','image/sweep.jpg');
-var tauntaun = new allProduct('tauntaun','image/tauntaun.jpg');
-var unicorn = new allProduct('unicorn','image/unicorn.jpg');
-var usb = new allProduct('usb','image/usb.jpg');
-var water_can = new allProduct('water_can','image/water-can.jpg');
-var wine_glass = new allProduct('wine_glass','image/wine-glass.jpg');
-
-var imageLeft = document.getElementById('left');
-var imageMiddle = document.getElementById('middle');
-var imageRight = document.getElementById('right');
-//var previouslyShown = [];
-
+function newObjects(){
+  bag = new allProduct('bag','image/bag.jpg');
+  banana = new allProduct('banana','image/banana.jpg');
+  bathroom = new allProduct('bathroom','image/bathroom.jpg');
+  boots = new allProduct('boots','image/boots.jpg');
+  breakfast = new allProduct('breakfast','image/breakfast.jpg');
+  bubblegum = new allProduct('bubblegum','image/bubblegum.jpg');
+  chair = new allProduct('chair','image/chair.jpg');
+  cthulhu = new allProduct('cthulhu','image/cthulhu.jpg');
+  dog_duck = new allProduct('dog_duck','image/dog-duck.jpg');
+  dragon = new allProduct('dragon','image/dragon.jpg');
+  pen = new allProduct('pen','image/pen.jpg');
+  pet_sweep = new allProduct('pet_sweep','image/pet-sweep.jpg');
+  scissors = new allProduct('scissors','image/scissors.jpg');
+  shark = new allProduct('shark','image/shark.jpg');
+  sweep = new allProduct('sweep','image/sweep.jpg');
+  tauntaun = new allProduct('tauntaun','image/tauntaun.jpg');
+  unicorn = new allProduct('unicorn','image/unicorn.jpg');
+  usb = new allProduct('usb','image/usb.jpg');
+  water_can = new allProduct('water_can','image/water-can.jpg');
+  wine_glass = new allProduct('wine_glass','image/wine-glass.jpg');
+}
+//check local Storage
+if(localStorage.usersData){
+  console.log('Local Storage exists');
+  var parsed = JSON.parse(localStorage.usersData);
+  imageArray = parsed;
+}else{
+  var imageArray = [];
+  newObjects();
+  console.log('Local Storage doesnt exist.');
+}
+;
 //generate three different numbers
 var getRandomNumber = function() {
 
@@ -80,6 +90,9 @@ var getRandomNumber = function() {
   imageLeft.src = imageArray[randLeft].filePath;
   imageMiddle.src = imageArray[randMiddle].filePath;
   imageRight.src = imageArray[randRight].filePath;
+  imageLeft.id = imageArray[randLeft].productName;
+  imageMiddle.id = imageArray[randMiddle].productName;
+  imageRight.id = imageArray[randRight].productName;
 
   imageArray[randLeft].numberShown += 1;
   imageArray[randMiddle].numberShown += 1;
@@ -87,35 +100,48 @@ var getRandomNumber = function() {
   //console.log(imageArray[randLeft].productName + ' has ' + imageArray[randLeft].numberShown + ' views' );
 
 };
+
+function tallyClicks(){
+
+}
+
 function handleClick(event){
   //previouslyShown = randomNumberArray;
-  if(event.target.id !== 'left' && event.target.id !== 'middle' && event.target.id !== 'right'){
+  if(event.target.id !== imageArray[randLeft].productName && event.target.id !== imageArray[randRight].productName && event.target.id !== imageArray[randMiddle].productName){
     alert('Click on an image');
     return;
   }
-  totalClicks += 1;
-  console.log('There have been ' + totalClicks + ' total clicks');
-  if (event.target.id === 'left' ){
-    //console.log('user clicked left');
-    getRandomNumber();
-    imageArray[randLeft].numberClicked = imageArray[randLeft].numberClicked + 1;
+  //console.log('There have been ' + totalClicks + ' total clicks');
 
-  } else if(event.target.id === 'middle'){
+  if (event.target.id === imageArray[randLeft].productName ){
+    //console.log('user clicked left');
+    imageArray[randLeft].numberClicked += 1;
+    getRandomNumber();
+
+  } else if(event.target.id === imageArray[randMiddle].productName){
     //console.log('user clicked middle');
+    imageArray[randMiddle].numberClicked += 1;
     getRandomNumber();
-    imageArray[randMiddle].numberClicked = imageArray[randMiddle].numberClicked + 1;
-  } else if(event.target.id === 'right'){
+
+  } else if(event.target.id === imageArray[randRight].productName){
     //console.log('user clicked right');
+    imageArray[randRight].numberClicked += 1;
     getRandomNumber();
-    imageArray[randRight].numberClicked = imageArray[randRight].numberClicked + 1;
   }
+  tallyClicks();
+  totalClicks += 1;
   if (totalClicks > 4){
     container.removeEventListener('click',handleClick);
     console.log('max number of clicks reached');
     resultsButton.hidden = false;
+  } else{
+    parsed = JSON.stringify(imageArray);
+    localStorage.setItem('parsed',parsed);
+
   }
 }
 
+//chart stuff
 function handleResultsButton(){
   //alert('this is when you draw the chart.');
   var labels = [];
@@ -144,9 +170,21 @@ function handleResultsButton(){
     },
 
   });
-}// closing for function
+}
 getRandomNumber();
 var container = document.getElementById('container');
 container.addEventListener('click',handleClick);
 var resultsButton = document.getElementById('resultsButton');
 resultsButton.addEventListener('click',handleResultsButton);
+//Check local storage
+// (function checkLocal(){
+//   if(localStorage.getItem('usersData')){
+//     console.log('Local Storage exists');
+//     var parsed = JSON.parse(localStorage.usersData);
+//     imageArray = parsed;
+//   }else{
+//     var imageArray = [];
+//     newObjects();
+//     console.log('Local Storage doesnt exist.');
+//   }
+// });
